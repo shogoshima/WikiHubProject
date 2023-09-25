@@ -57,9 +57,14 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+DOWNLOAD_TIMEOUT = 540
+DOWNLOAD_DELAY = 5
+DEPTH_LIMIT = 10
+EXTENSIONS = {
+    'scrapy.extensions.telnet.TelnetConsole': None,
+    'scrapy.extensions.closespider.CloseSpider': 10
+}
+
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
@@ -92,7 +97,6 @@ ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-
 
 # Por default, o crawler funciona em DFS
 # Se quisermos que o crawler funcione em BFS

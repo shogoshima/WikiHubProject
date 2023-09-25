@@ -122,7 +122,7 @@ def getBS(url):
 
 # passar a wiki que se quer, e os tópicos que se quer pesquisar dentro dessa wiki
 wiki = "minecraft"
-topics_list = ['herobrine']
+topics_list = ['herobrine', 'nether']
 
 site = getBS("https://www.fandom.com/?s=" + wiki.replace(" ", ""))
 wiki_site = site.select('a.top-community-content')[0]['href']
