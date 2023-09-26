@@ -57,12 +57,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-DOWNLOAD_TIMEOUT = 540
-DOWNLOAD_DELAY = 5
-DEPTH_LIMIT = 10
+CLOSESPIDER_ITEMCOUNT = 15
 EXTENSIONS = {
-    'scrapy.extensions.telnet.TelnetConsole': None,
-    'scrapy.extensions.closespider.CloseSpider': 10
+    # 'scrapy.extensions.telnet.TelnetConsole': None,
+    'scrapy.extensions.closespider.CloseSpider': 500
 }
 
 

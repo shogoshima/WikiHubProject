@@ -16,7 +16,6 @@ from WikiHub.WikiHub.spiders.wikifinder import WikiFinder
 
 app = Flask(__name__)
 
-output_data = []
 crawl_runner = CrawlerRunner()
 
 # By Deafult Flask will come into this when we run the file
@@ -36,18 +35,22 @@ def submit():
         # This will remove any existing file with the same name so that the scrapy will not append the data to any previous file.
         if os.path.exists("<path_to_outputfile.json>"): 
         	os.remove("<path_to_outputfile.json>")
+         
+        global output_data
+        output_data = []
 
         return redirect(url_for('scrape')) # Passing to the Scrape function
 
 
-@app.route("/scrape")
+@app.route("/results")
 def scrape():
 
     scrape_with_crochet(baseURL=baseURL) # Passing that URL to our Scraping Function
 
     time.sleep(10) # Pause the function while the scrapy spider is running
     
-    return jsonify(output_data) # Returns the scraped data after being running for 10 seconds.
+    # return jsonify(output_data) # Returns the scraped data after being running for 10 seconds.
+    return render_template("index.html", data=output_data)
 
 @crochet.run_in_reactor
 def scrape_with_crochet(baseURL):

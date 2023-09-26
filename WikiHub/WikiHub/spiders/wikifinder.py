@@ -1,5 +1,6 @@
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+from scrapy.exceptions import CloseSpider
 import requests
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
@@ -29,6 +30,7 @@ class WikiFinder(CrawlSpider):
         Rule(LinkExtractor(allow='https://[A-Za-z0-9]+\.fandom\.com(|/wiki/)$'), callback='parse_items', follow=True, cb_kwargs={'is_main': True}),
         # Rule(LinkExtractor(allow='https://[A-Za-z0-9]+\.fandom\.com/wiki/[A-Za-z0-9]+'), callback='parse_items', follow=False, cb_kwargs={'is_main': False})
     ]
+    item_count = 0
     
     def __init__(self, category='', **kwargs): # The category variable will have the input URL
         self.myBaseUrl = category
@@ -40,9 +42,11 @@ class WikiFinder(CrawlSpider):
         custom_settings = {'FEED_URI': 'WikiHub/outputfile.json', 'CLOSESPIDER_TIMEOUT' : 10}
         # This will tell scrapy to store the scraped data to outputfile.json and for how long the spider should run.
 
-
     def parse_items(self, response, is_main):
-        # print(response.url)
+        if self.item_count == 10:
+          raise CloseSpider('item count limit exceeded')
+        else:
+          self.item_count += 1
         title = response.css('a.fandom-community-header__community-name::text').extract_first()
         print('Title is: {} '.format(title))
         if is_main:

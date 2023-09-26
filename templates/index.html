@@ -2,31 +2,25 @@
 <html>
 <head>
 	<title>temp_app</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
 </head>
 
-<style>
-	h1
-	{
-		text-align: center;
-	}
-	form
-	{
-	 	text-align: center;
-	}
-
-</style>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <body>
 	<div class="w3-container w3-display-middle">
-		<div class="w3-panel w3-card" style="height: 400px;">
-			<h1>Wiki Finder</h1><br><br>
+		<div class="w3-panel w3-card" style="height: fit-content;">
+			<h1>Wiki Finder</h1><br>
 			<form id="input-form" method="post" action="/">
 				<input type="text" name="wiki" style="width: 300px;" placeholder="Wiki Name"/><br><br>
-				<input id="submitbutton" type="submit" name="submitbutton" value="Show wikis"/>
+				<input id="submitbutton" type="submit" name="submitbutton" value="Show wikis" style="margin: 20px"/>
 			</form>
+			<div id='info_section'>
+				{% for data in data %}
+					<p>{{data['title']}}</p>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 
