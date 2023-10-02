@@ -3,10 +3,8 @@
 <head>
 	<title>temp_app</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
 </head>
-
 
 <body>
 	<div class="w3-container w3-display-middle">
@@ -15,9 +13,15 @@
 			<form id="input-form" method="post" action="/">
 				<input type="text" name="wiki" style="width: 300px;" placeholder="Wiki Name"/><br>
 				<input type="text" name="subject" style="width: 300px" placeholder="Subject Name (optional)"/><br><br>
-				<input id="submitbutton" type="submit" name="submitbutton" value="Show wikis" style="margin: 20px"/>
+				<input id="submitbutton" type="submit" name="submitbutton" value="Show results" style="margin: 20px"/>
 			</form>
 			<div id='info_section'>
+				{% for list in search_data %}
+					{% for data in list %}
+						<p> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> Contents: {{data['url']}}</p>
+					{% endfor %}
+				{% endfor %}
+				<br>
 				{% for data in data %}
 					<p>{{data['url']}}</p>
 				{% endfor %}

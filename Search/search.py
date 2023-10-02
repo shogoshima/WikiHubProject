@@ -36,6 +36,15 @@ class Content:
             "url": self.url
         }
         file.write(json.dumps(content)+',')
+    def returning(self):
+        content = {
+            "title": self.title,
+            "headlines": self.headlines,
+            "body": self.body,
+            "imageurl": self.imgurl,
+            "url": self.url
+        }
+        return content
 
 class Website:
     # contém informações sobre a estrutura do site 
@@ -83,6 +92,8 @@ class Crawler:
     def search(self, topic, site):
         # pesquisa um dado site em busca de um dado tópico e registra
         # todas as páginas encontradas
+        ct = 0
+        results = []
         visitedUrl = set()
         bs = self.getPage(site.searchUrl.format(topic))
         urlList = bs.select(site.resultListing)
@@ -105,8 +116,15 @@ class Crawler:
             body = self.safeGet_list(bs, site.bodyTag)
             if title != '':
                 print(title)
+                ct += 1
                 content = Content(topic, title, headline, body, img, url)
-                content.write()
+                # content.write()
+                results.append(content.returning())
+                if ct == 5:
+                    break
+        # for result in results:
+        #     print(result)
+        return results
 
 def getPage(url):
   try:
@@ -123,35 +141,41 @@ def getBS(url):
     return BeautifulSoup(getPage(url).read(), 'html.parser')
   return None
 
-# passar a wiki que se quer, e os tópicos que se quer pesquisar dentro dessa wiki
-wiki = "minecraft"
-topics_list = ['nether']
+# # passar a wiki que se quer, e os tópicos que se quer pesquisar dentro dessa wiki
+# wiki = "minecraft"
+# topics_list = ['nether']
 
-site = getBS("https://www.fandom.com/?s=" + wiki.replace(" ", ""))
-wiki_site = site.select('a.top-community-content')[0]['href']
-crawler = Crawler()
+# site = getBS("https://www.fandom.com/?s=" + wiki.replace(" ", ""))
+# wiki_site = site.select('a.top-community-content')[0]['href']
+# crawler = Crawler()
 
-siteData = [
-    [wiki, wiki_site, wiki_site + "/wiki/Special:Search?query={}&scope=internal&navigationSearch=true&so=trending",
-    'a.unified-search__result__title', True, 'span.mw-page-title-main',
-    'span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
-]
-sites = []
+# siteData = [
+#     [wiki, wiki_site, wiki_site + "/wiki/Special:Search?query={}&scope=internal&navigationSearch=true&so=trending",
+#     'a.unified-search__result__title', True, 'span.mw-page-title-main',
+#     'span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
+# ]
+# sites = []
 
-# abrir arquivo em txt para salvar resultados
-script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'results.json')
-file = open(file_path, mode='w', encoding='utf-8')
-file.write('[')
+# # abrir arquivo em txt para salvar resultados
+# # script_dir = os.path.dirname(os.path.abspath(__file__))
+# # file_path = os.path.join(script_dir, 'results.json')
+# # file = open(file_path, mode='w', encoding='utf-8')
+# # file.write('[')
 
-for row in siteData:
-    sites.append(Website(row[0], row[1], row[2],
-    row[3], row[4], row[5], row[6], row[7], row[8]))
-    topics = topics_list
-    for targetSite in sites:
-        for topic in topics:
-            print("\nGETTING INFO ABOUT: " + topic)
-            print("INFO FROM: " + row[0])
-            crawler.search(topic, targetSite)
-file.write('{}]')
-file.close()
+# output = []
+# for row in siteData:
+#     sites.append(Website(row[0], row[1], row[2],
+#     row[3], row[4], row[5], row[6], row[7], row[8]))
+#     topics = topics_list
+#     for targetSite in sites:
+#         for topic in topics:
+#             print("\nGETTING INFO ABOUT: " + topic)
+#             print("INFO FROM: " + row[0])
+#             output.append(crawler.search(topic, targetSite))
+
+# print("terminei: ")
+# for lista in output:
+#     for data in lista:
+#         print(data['title'])
+# file.write('{}]')
+# file.close()
