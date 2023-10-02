@@ -32,7 +32,7 @@ class WikiFinder(CrawlSpider):
     ]
     item_count = 0
     
-    def __init__(self, category='', **kwargs): # The category variable will have the input URL
+    def __init__(self, category='', **kwargs): # The category variable will have the input url
         self.myBaseUrl = category
         site = getBS("https://www.fandom.com/?s=" + category.replace(" ", ""))
         wiki_site = site.select('a.top-community-content')[0]['href']

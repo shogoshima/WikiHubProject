@@ -13,12 +13,13 @@
 		<div class="w3-panel w3-card" style="height: fit-content;">
 			<h1>Wiki Finder</h1><br>
 			<form id="input-form" method="post" action="/">
-				<input type="text" name="wiki" style="width: 300px;" placeholder="Wiki Name"/><br><br>
+				<input type="text" name="wiki" style="width: 300px;" placeholder="Wiki Name"/><br>
+				<input type="text" name="subject" style="width: 300px" placeholder="Subject Name (optional)"/><br><br>
 				<input id="submitbutton" type="submit" name="submitbutton" value="Show wikis" style="margin: 20px"/>
 			</form>
 			<div id='info_section'>
 				{% for data in data %}
-					<p>{{data['title']}}</p>
+					<p>{{data['url']}}</p>
 				{% endfor %}
 			</div>
 		</div>

@@ -28,9 +28,10 @@ def index():
 @app.route('/', methods=['POST'])
 def submit():
     if request.method == 'POST':
-        s = request.form['wiki']
+        wiki = request.form['wiki']
+        subject = request.form['subject']
         global baseURL
-        baseURL = s
+        baseURL = wiki
         
         # This will remove any existing file with the same name so that the scrapy will not append the data to any previous file.
         if os.path.exists("<path_to_outputfile.json>"): 

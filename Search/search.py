@@ -7,11 +7,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import re
 import os
-
-# abrir arquivo em txt para salvar resultados
-script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, 'results.txt')
-file = open(file_path, mode='w', encoding='utf-8')
+import json
 
 class Content:
     # class-base comum para todos os artigos/páginas, ou nesse caso, infos
@@ -30,9 +26,16 @@ class Content:
         print("IMAGE URL: {}".format(self.imgurl))
         print("URL: {}\n".format(self.url))
     def write(self):
-        content=''.join('''TITLE: {}\n HEADLINES: {}\n BODY: {}\n IMAGEURL: {}\n URL: {}\n\n'''.format(
-            self.title, self.headlines, self.body, self.imgurl, self.url))
-        file.write(content)
+        # content=''.join('''"title": "{}", "headlines": {}, "body": "{}", "imageurl": "{}", "url": "{}"'''.format(
+        #     self.title, self.headlines, self.body, self.imgurl, self.url))
+        content = {
+            "title": self.title,
+            "headlines": self.headlines,
+            "body": self.body,
+            "imageurl": self.imgurl,
+            "url": self.url
+        }
+        file.write(json.dumps(content)+',')
 
 class Website:
     # contém informações sobre a estrutura do site 
@@ -122,7 +125,7 @@ def getBS(url):
 
 # passar a wiki que se quer, e os tópicos que se quer pesquisar dentro dessa wiki
 wiki = "minecraft"
-topics_list = ['herobrine', 'nether']
+topics_list = ['nether']
 
 site = getBS("https://www.fandom.com/?s=" + wiki.replace(" ", ""))
 wiki_site = site.select('a.top-community-content')[0]['href']
@@ -134,6 +137,13 @@ siteData = [
     'span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
 ]
 sites = []
+
+# abrir arquivo em txt para salvar resultados
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, 'results.json')
+file = open(file_path, mode='w', encoding='utf-8')
+file.write('[')
+
 for row in siteData:
     sites.append(Website(row[0], row[1], row[2],
     row[3], row[4], row[5], row[6], row[7], row[8]))
@@ -143,3 +153,5 @@ for row in siteData:
             print("\nGETTING INFO ABOUT: " + topic)
             print("INFO FROM: " + row[0])
             crawler.search(topic, targetSite)
+file.write('{}]')
+file.close()
