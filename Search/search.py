@@ -71,7 +71,7 @@ class Crawler:
     def safeGet(self, pageObj, selector):
         childObj = pageObj.select(selector)
         if childObj is not None and len(childObj) > 0:
-            return childObj[0].get_text()
+            return childObj[0].get_text().strip().replace('\n', '').replace('\t', '')
         return ""
     
     def safeGet_img(self, pageObj, selector):
@@ -89,6 +89,26 @@ class Crawler:
             return result_list
         return ""
     
+    def safeGet_body(self, bs, headlines, site):
+        results = dict()
+        for headline in headlines:
+            html = ""
+            headline = headline.replace(' ', '_')
+            for tag in bs.find("span", {"id": headline}).parent.next_siblings:
+                if tag.name == "h2":
+                    break
+                if tag.name == "figure":
+                    continue
+                if tag.name == "h3":
+                    edit = tag.find("span", {"class": "mw-editsection"})
+                    if edit:
+                        edit.decompose()
+                    html += str(tag)
+                else:
+                    html += str(tag)
+            results.update({headline : html})
+        return results
+    
     def search(self, topic, site):
         # pesquisa um dado site em busca de um dado tópico e registra
         # todas as páginas encontradas
@@ -97,33 +117,30 @@ class Crawler:
         visitedUrl = set()
         bs = self.getPage(site.searchUrl.format(topic))
         urlList = bs.select(site.resultListing)
+        # print(urlList)
         for url in enumerate(urlList):
-            # print(urlList)
             url = url[1]['href']
             if url in visitedUrl:
                 continue
             visitedUrl.add(url)
-            if (site.absoluteUrl):
-                bs = self.getPage(url)
-            else:
-                bs = self.getPage(site.url + url)
+            if not (site.absoluteUrl):
+                url = site.url + url
+            bs = self.getPage(url)
             if bs is None:
                 print("Something was wrong with that page or URL. Skipping!")
                 return
             title = self.safeGet(bs, site.titleTag)
-            headline = self.safeGet_list(bs, site.headlineTag)
+            headlines = self.safeGet_list(bs, site.headlineTag)
             img = self.safeGet_img(bs, site.imgTag)
-            body = self.safeGet_list(bs, site.bodyTag)
+            body = self.safeGet_body(bs, headlines, url)
             if title != '':
                 print(title)
                 ct += 1
-                content = Content(topic, title, headline, body, img, url)
+                content = Content(topic, title, headlines, body, img, url)
                 # content.write()
                 results.append(content.returning())
                 if ct == 5:
                     break
-        # for result in results:
-        #     print(result)
         return results
 
 def getPage(url):
@@ -142,8 +159,8 @@ def getBS(url):
   return None
 
 # # passar a wiki que se quer, e os tópicos que se quer pesquisar dentro dessa wiki
-# wiki = "minecraft"
-# topics_list = ['nether']
+# wiki = "star wars"
+# topics_list = ['luke']
 
 # site = getBS("https://www.fandom.com/?s=" + wiki.replace(" ", ""))
 # wiki_site = site.select('a.top-community-content')[0]['href']
@@ -151,8 +168,8 @@ def getBS(url):
 
 # siteData = [
 #     [wiki, wiki_site, wiki_site + "/wiki/Special:Search?query={}&scope=internal&navigationSearch=true&so=trending",
-#     'a.unified-search__result__title', True, 'span.mw-page-title-main',
-#     'span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
+#     'a.unified-search__result__title', True, 'h1.page-header__title',
+#     'h2 span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
 # ]
 # sites = []
 
@@ -172,10 +189,6 @@ def getBS(url):
 #             print("\nGETTING INFO ABOUT: " + topic)
 #             print("INFO FROM: " + row[0])
 #             output.append(crawler.search(topic, targetSite))
-
-# print("terminei: ")
-# for lista in output:
-#     for data in lista:
-#         print(data['title'])
-# file.write('{}]')
-# file.close()
+            
+# # file.write('{}]')
+# # file.close()

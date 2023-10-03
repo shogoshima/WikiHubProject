@@ -50,11 +50,9 @@ def submit():
 @app.route("/results")
 def scrape():
 
-    scrape_with_crochet(base=base) # Passing that URL to our Scraping Function
-    
     if topics:
-        print("oi, rodei")
         crawl_with_bs(topics)
+    scrape_with_crochet(base=base) # Passing that URL to our Scraping Function
 
     time.sleep(5) # Pause the function while the scrapy spider is running
     
@@ -78,11 +76,9 @@ def crawl_with_bs(topics):
     site = getBS("https://www.fandom.com/?s=" + base.replace(" ", ""))
     wiki_site = site.select('a.top-community-content')[0]['href']
     crawler = Crawler()
-    siteData = [
-                [base.replace(" ", ""), wiki_site, wiki_site + "/wiki/Special:Search?query={}&scope=internal&navigationSearch=true&so=trending",
-                'a.unified-search__result__title', True, 'span.mw-page-title-main',
-                'span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']
-                ]
+    siteData = [[base.replace(" ", ""), wiki_site, wiki_site + "/wiki/Special:Search?query={}&scope=internal&navigationSearch=true&so=trending",
+                'a.unified-search__result__title', True, 'h1.page-header__title',
+                'h2 span.mw-headline', 'img.pi-image-thumbnail', 'div.mw-parser-output p']]
     sites = []
     for item in topics:
         for row in siteData:

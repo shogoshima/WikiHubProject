@@ -39,7 +39,7 @@ class WikiFinder(CrawlSpider):
         self.start_urls = [wiki_site]
         super().__init__(**kwargs)
 
-        custom_settings = {'FEED_URI': 'WikiHub/outputfile.json', 'CLOSESPIDER_TIMEOUT' : 10}
+        custom_settings = {'FEED_URI': 'WikiHub/outputfile.json'}
         # This will tell scrapy to store the scraped data to outputfile.json and for how long the spider should run.
 
     def parse_items(self, response, is_main):
