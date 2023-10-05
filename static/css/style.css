@@ -5,3 +5,15 @@ h1 {
 form {
     text-align: center;
 }
+
+.responsivediv {
+    width: auto;
+    height: 230px;
+    overflow: auto;
+    margin-bottom: 3px;
+    padding-left: 0.5em;
+    border: 1px solid #AAAAAA;
+    -moz-border-radius-topleft: 0.5em;
+    -webkit-border-top-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+}

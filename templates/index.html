@@ -18,7 +18,7 @@
 			<div id='info_section'>
 				{% for list in search_data %}
 					{% for data in list %}
-						<h3> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> URL: {{data['url']}}</h3>
+						<h3> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> URL: <a href={{data['url']}}>{{data['url']}} </a></h3>
 						{% for content in data['headlines'] %}
 						<p><b>{{content}}:</b> <br> {{data['body'][content]|safe}} </p>
 						{% endfor %}

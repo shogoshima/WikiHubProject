@@ -85,7 +85,7 @@ class Crawler:
         childObj = pageObj.select(selector)
         if childObj is not None and len(childObj) > 0:
             for child in childObj:
-                result_list.append(child.get_text().strip().replace('\n', ' ').replace('\t', ' '))
+                result_list.append(child.get_text().strip().replace('\n', ' ').replace('\t', ' ').replace(' ', '_'))
             return result_list
         return ""
     
@@ -94,18 +94,21 @@ class Crawler:
         for headline in headlines:
             html = ""
             headline = headline.replace(' ', '_')
+            # print(bs.find("span", {"id": headline}))
             for tag in bs.find("span", {"id": headline}).parent.next_siblings:
                 if tag.name == "h2":
                     break
                 if tag.name == "figure":
                     continue
-                if tag.name == "h3":
+                if tag.name == "h3" or tag.name == "h4":
                     edit = tag.find("span", {"class": "mw-editsection"})
                     if edit:
                         edit.decompose()
                     html += str(tag)
                 else:
                     html += str(tag)
+            # if (bs.find("span", {"id": headline}).get_text() == "Significance of colors"):
+            #     print(html)
             results.update({headline : html})
         return results
     
