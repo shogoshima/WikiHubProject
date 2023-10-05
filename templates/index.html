@@ -19,6 +19,7 @@
 				{% for list in search_data %}
 					{% for data in list %}
 						<h3> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> URL: <a href={{data['url']}}>{{data['url']}} </a></h3>
+						<iframe src={{data['url']}} height="500" width="90%"></iframe>
 						{% for content in data['headlines'] %}
 						<p><b>{{content}}:</b> <br> {{data['body'][content]|safe}} </p>
 						{% endfor %}
