@@ -54,7 +54,7 @@ def scrape():
         crawl_with_bs(topics)
     scrape_with_crochet(base=base) # Passing that URL to our Scraping Function
 
-    time.sleep(5) # Pause the function while the scrapy spider is running
+    time.sleep(2) # Pause the function while the scrapy spider is running
     
     # return jsonify(output_data) # Returns the scraped data after being running for 10 seconds.
     return render_template("index.html", data=output_data, search_data=output_search)

@@ -16,21 +16,44 @@
 				<input id="submitbutton" type="submit" name="submitbutton" value="Show results" style="margin: 20px"/>
 			</form>
 			<div id='info_section'>
+				<h2>Search results:</h2>
 				{% for list in search_data %}
 					{% for data in list %}
-						<h3> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> URL: <a href={{data['url']}}>{{data['url']}} </a></h3>
-						<iframe src={{data['url']}} height="500" width="90%"></iframe>
-						{% for content in data['headlines'] %}
-						<p><b>{{content}}:</b> <br> {{data['body'][content]|safe}} </p>
-						{% endfor %}
+						<button type="button" class="collapsible"> {{data['title']}}</button>
+						<iframe class="content" src={{data['url']}} height="500" width="90%"></iframe>
 					{% endfor %}
 				{% endfor %}
 				<br>
+				<h2>Related wikis:</h2>
 				{% for data in data %}
-					<p>{{data['url']}}</p>
+					<button type="button" class="collapsible">{{data['title']}}</button>
+					<iframe class="content" src={{data['url']}} height="500" width="90%"></iframe>
 				{% endfor %}
 			</div>
 		</div>
 	</div>
 </body>
+<script>
+	var coll = document.getElementsByClassName("collapsible");
+	var i;
+
+	for (i = 0; i < coll.length; i++) {
+	coll[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var content = this.nextElementSibling;
+		if (content.style.display === "block") {
+			content.style.display = "none";
+		} else {
+			content.style.display = "block";
+		}
+	});
+	}
+</script>
 </html>
+
+{# 
+<h3> Title: {{data['title']}} <br> Contents: {{data['headlines']}} <br> URL: <a href={{data['url']}}>{{data['url']}} </a></h3>
+						{% for content in data['headlines'] %}
+						<p><b>{{content}}:</b> <br> {{data['body'][content]|safe}} </p>
+						{% endfor %}
+#}
